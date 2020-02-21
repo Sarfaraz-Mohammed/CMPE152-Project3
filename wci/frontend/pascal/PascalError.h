@@ -78,6 +78,9 @@ enum class PascalErrorCode
     UNIMPLEMENTED,
     UNRECOGNIZABLE,
     WRONG_NUMBER_OF_PARMS,
+	MISSING_AGAIN,
+	MISSING_EXIT_ARROW,
+	UNEXPECTED_WHEN,
 
     // Fatal errors.
     IO_ERROR,
@@ -141,6 +144,10 @@ constexpr PascalErrorCode UNEXPECTED_TOKEN = PascalErrorCode::UNEXPECTED_TOKEN;
 constexpr PascalErrorCode UNIMPLEMENTED = PascalErrorCode::UNIMPLEMENTED;
 constexpr PascalErrorCode UNRECOGNIZABLE = PascalErrorCode::UNRECOGNIZABLE;
 constexpr PascalErrorCode WRONG_NUMBER_OF_PARMS = PascalErrorCode::WRONG_NUMBER_OF_PARMS;
+constexpr PascalErrorCode MISSING_AGAIN = PascalErrorCode::MISSING_AGAIN;
+constexpr PascalErrorCode MISSING_EXIT_ARROW = PascalErrorCode::MISSING_EXIT_ARROW;
+constexpr PascalErrorCode UNEXPECTED_WHEN = PascalErrorCode::UNEXPECTED_WHEN;
+
 
 constexpr PascalErrorCode IO_ERROR = PascalErrorCode::IO_ERROR;
 constexpr PascalErrorCode TOO_MANY_ERRORS = PascalErrorCode::TOO_MANY_ERRORS;
