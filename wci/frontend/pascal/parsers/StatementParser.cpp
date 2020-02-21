@@ -1,4 +1,3 @@
-  
 /**
  * <h1>StatementParser</h1>
  *
