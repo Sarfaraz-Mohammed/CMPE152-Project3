@@ -1,3 +1,4 @@
+  
 /**
  * <h1>StatementParser</h1>
  *
@@ -15,6 +16,7 @@
 #include "ForStatementParser.h"
 #include "IfStatementParser.h"
 #include "CaseStatementParser.h"
+#include "LoopStatementParser.h"
 #include "../PascalParserTD.h"
 #include "../PascalToken.h"
 #include "../PascalError.h"
@@ -35,12 +37,12 @@ using namespace wci::intermediate::icodeimpl;
 EnumSet<PascalTokenType> StatementParser::STMT_START_SET =
 {
     PT_BEGIN, PT_CASE, PT_FOR, PT_IF, PT_REPEAT, PT_WHILE,
-    PT_IDENTIFIER, PT_SEMICOLON,
+    PT_IDENTIFIER, PT_SEMICOLON, PT_LOOP, PT_WHEN,
 };
 
 EnumSet<PascalTokenType> StatementParser::STMT_FOLLOW_SET =
 {
-    PT_SEMICOLON, PT_END, PT_ELSE, PT_UNTIL, PT_DOT,
+    PT_SEMICOLON, PT_END, PT_ELSE, PT_UNTIL, PT_DOT, PT_AGAIN,
 };
 
 ICodeNode *StatementParser::parse_statement(Token *token) throw (string)
@@ -99,11 +101,22 @@ ICodeNode *StatementParser::parse_statement(Token *token) throw (string)
             statement_node = case_parser.parse_statement(token);
             break;
         }
+        case PT_LOOP:
+        {
+        	LoopStatementParser loop_parser(this);
+        	statement_node = loop_parser.parse_statement(token);
+        	break;
+        }
+
+
 
         default:
         {
             statement_node =
                 ICodeFactory::create_icode_node((ICodeNodeType) NT_NO_OP);
+            if((PascalTokenType) token->get_type() == PT_WHEN){ //todo: handle a WHEN statement at the outside of a loop-again statement
+            	error_handler.flag(token, UNEXPECTED_WHEN, this);
+            }
             break;
         }
     }
