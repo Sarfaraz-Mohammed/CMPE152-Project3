@@ -17,11 +17,18 @@ return_statement : 'return' expression ';';
 procedure_call_statement : IDENTIFIER '(' arguments ')' ';'; 
 
 printStatement      : PRINTF '(' formatString printArg* ')' ';' ;
+formatString   : STRING ;
+printArg       : ',' expression ;
 
 if_statement : IF '(' expression ')' '{' statement '}' (ELSEIF '(' expression ')' '{' statement '}')+ (ELSE '{' statement '}')? ;
 while_statement: WHILE '(' expression ')' '{' statement '}';
 for_statement: UNTIL '(' expression ')' '{' statement '}';
 do_while_statement: DO '{' compound_statement '}' WHILE '(' expression ')' ';' ;
+
+function_call : IDENTIFIER '(' arguments ')'; 
+
+arguments : (expression)*;
+
 
 //VARIABLES
 variable: '&' IDENTIFIER;
