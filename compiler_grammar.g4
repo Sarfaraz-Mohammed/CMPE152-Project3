@@ -1,22 +1,16 @@
 grammar compiler_grammar;
 
-@header {
-#include "wci/intermediate/TypeSpec.h"
-#include "wci/intermediate/icodeimpl/ICodeImpl.h"
-using namespace wci::intermediate;
-using namespace wci::intermediate::icodeimpl;
-}
 
 program : declarations method_delcarations main_method;
 main_method : MAIN '{' (compound_stmt)* (NEWLINE)*'}'; 
 declarations: (variable_delcaration)*; 
 method_delcarations : (function | procedure)*;
 
-function locals [int locals_var, int stack_var]: IDENTIFIER '(' parameters ')' TYPEID '{' declarations compound_stmt'}' ';' ; 
+function locals [int locals_var, int stack_var]: IDENTIFIER '(' parameters ')' TYPE '{' declarations compound_stmt'}' ';' ; 
 procedure locals [int locals_var, int stack_var]: IDENTIFIER '(' parameters ')''{' declarations compound_stmt '}' ';' ; 
 
 parameters : (variable_delcaration)*;
-variable_delcaration : TYPEID variable ';'; 
+variable_delcaration : TYPE variable ';'; 
 
 stmt : assignment_stmt
 	 | if_stmt
@@ -28,15 +22,19 @@ stmt : assignment_stmt
 	 | procedure_call_stmt
 	 ;
 
+TYPE : 'i'
+	| 'f'
+	; 
+	
 compound_stmt : (stmt)+ ;
 
 assignment_stmt: variable '=' expr ';';
-return_stmt : 'return' expression ';'; 
+return_stmt : 'return' expr ';'; 
 procedure_call_stmt : IDENTIFIER '(' arguments ')' ';'; 
 
-printStatement      : PRINT '(' formatString printArg* ')' ';' ;
+printStmt     : PRINT '(' formatString printArg* ')' ';' ;
 formatString   : STRING ;
-printArg       : ',' expression ;
+printArg       : ',' expr ;
 
 if_stmt : IF '(' expr ')' '{' compound_stmt '}' (ELSE_IF '(' expr ')' '{' compound_stmt '}')* (ELSE '{' compound_stmt '}' )? ;
 while_stmt: WHILE '(' expr ')' '{' compound_stmt '}';
@@ -103,13 +101,14 @@ GLOBAL: 'global';
 CLOSE: 'close';
 RETURN: 'return';
 INDEX: 'index';
-
+PRINT: 'print';
 
 //LOOPS & CONDITIONALS
 WHILE: 'while';
 FOR: 'for';
 IF: 'if';
-ELSEIF: 'elseif';
+UNTIL: 'until';
+ELSE_IF: 'elseif';
 DO: 'do';
 THEN: 'then';
 ELSE: 'else';
@@ -121,6 +120,4 @@ FALSE: 'FALSE';
 ARRAY: 'ARRAY';
 NUMBER_ARRAY: 'NUMBER_ARRAY';
 CHAR_ARRAY: 'CHAR_ARRAY';
-
-
 
