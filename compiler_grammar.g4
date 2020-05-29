@@ -1,46 +1,65 @@
 grammar compiler_grammar;
 
-statement: assignment_statement
-        | if_statement
-        | while_statement
-        | for_statement
-        | do_while_statement
-	| printStatement
-	| return_statement
-	| procedure_call_statement
-        ;
+@header {
+#include "wci/intermediate/TypeSpec.h"
+#include "wci/intermediate/icodeimpl/ICodeImpl.h"
+using namespace wci::intermediate;
+using namespace wci::intermediate::icodeimpl;
+}
 
-compound_statement : (statement)+ ;
+program : declarations method_delcarations main_method;
+main_method : MAIN '{' (compound_stmt)* (NEWLINE)*'}'; 
+declarations: (variable_delcaration)*; 
+method_delcarations : (function | procedure)*;
 
-assignment_statement: variable '=' expression ';';
-return_statement : 'return' expression ';'; 
-procedure_call_statement : IDENTIFIER '(' arguments ')' ';'; 
+function locals [int locals_var, int stack_var]: IDENTIFIER '(' parameters ')' TYPEID '{' declarations compound_stmt'}' ';' ; 
+procedure locals [int locals_var, int stack_var]: IDENTIFIER '(' parameters ')''{' declarations compound_stmt '}' ';' ; 
 
-printStatement      : PRINTF '(' formatString printArg* ')' ';' ;
+parameters : (variable_delcaration)*;
+variable_delcaration : TYPEID variable ';'; 
+
+stmt : assignment_stmt
+	 | if_stmt
+	 | while_stmt
+	 | until_stmt
+	 | do_while_stmt
+	 | printStmt
+	 | return_stmt
+	 | procedure_call_stmt
+	 ;
+
+compound_stmt : (stmt)+ ;
+
+assignment_stmt: variable '=' expr ';';
+return_stmt : 'return' expression ';'; 
+procedure_call_stmt : IDENTIFIER '(' arguments ')' ';'; 
+
+printStatement      : PRINT '(' formatString printArg* ')' ';' ;
 formatString   : STRING ;
 printArg       : ',' expression ;
 
-if_statement : IF '(' expression ')' '{' statement '}' (ELSEIF '(' expression ')' '{' statement '}')+ (ELSE '{' statement '}')? ;
-while_statement: WHILE '(' expression ')' '{' statement '}';
-for_statement: UNTIL '(' expression ')' '{' statement '}';
-do_while_statement: DO '{' compound_statement '}' WHILE '(' expression ')' ';' ;
+if_stmt : IF '(' expr ')' '{' compound_stmt '}' (ELSE_IF '(' expr ')' '{' compound_stmt '}')* (ELSE '{' compound_stmt '}' )? ;
+while_stmt: WHILE '(' expr ')' '{' compound_stmt '}';
+until_stmt: UNTIL '(' expr ')' '{' compound_stmt '}';
+do_while_stmt: DO '{' compound_stmt '}' WHILE '(' expr ')' ';' ;
 
 function_call : IDENTIFIER '(' arguments ')'; 
-
-arguments : (expression)*;
+arguments : (expr)*;
 
 
 //VARIABLES
 variable: '&' IDENTIFIER;
 
-expression: expression MULTIPLY expression
-        | expression DIVISION expression
-        | expression ADDITION expression
-        | expression SUBTRACTION expression
-        | expression variable
-        | expression number
-        | '(' expression ')'
+expr: expr MULTIPLY expr
+        | expr DIVISION expr
+        | expr ADDITION expr
+        | expr SUBTRACTION expr
+        | variable
+        | number
+	| signed_number
+        | '(' expr ')'
         | IDENTIFIER
+	| function_call
         ;
 
 //Parser Rules//
@@ -70,6 +89,9 @@ EQUAL: '==';
 
 NEWLINE: '\r'? '\n' -> skip;
 WHITESPACE: [\t]+ -> skip;
+
+QUOTE  : '\'' ;
+STRING : QUOTE STRING_CHAR* QUOTE ;
 
 ///////-------RESERVED WORDS-------///////
 END: 'end';
