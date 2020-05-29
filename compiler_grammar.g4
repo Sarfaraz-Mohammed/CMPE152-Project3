@@ -110,6 +110,9 @@ ELSEIF: 'elseif';
 DO: 'do';
 THEN: 'then';
 ELSE: 'else';
+MAIN : 'main';
+TRUE : 'TRUE'; 
+FALSE: 'FALSE';
 
 //ARRAYS
 ARRAY: 'ARRAY';
