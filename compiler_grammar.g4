@@ -8,6 +8,8 @@ statement: assignment_statement
         ;
 
 assignment_statement: variable '=' expression ';';
+return_stmt : 'return' expr ';'; 
+procedure_call_stmt : IDENTIFIER '(' arguments ')' ';'; 
 
 if_statement : IF '(' expression ')' '{' statement '}' (ELSEIF '(' expression ')' '{' statement '}')+ (ELSE '{' statement '}')? ;
 while_statement: WHILE '(' expression ')' '{' statement '}';
