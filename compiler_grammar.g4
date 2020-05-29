@@ -56,7 +56,6 @@ expr: expr MULTIPLY expr
         | expr SUBTRACTION expr
         | variable
         | number
-	| signed_number
         | '(' expr ')'
         | IDENTIFIER
 	| function_call
@@ -92,6 +91,10 @@ WHITESPACE: [\t]+ -> skip;
 
 QUOTE  : '\'' ;
 STRING : QUOTE STRING_CHAR* QUOTE ;
+
+fragment STRING_CHAR : QUOTE QUOTE  
+                     | ~('\'')      
+                     ;
 
 ///////-------RESERVED WORDS-------///////
 END: 'end';
