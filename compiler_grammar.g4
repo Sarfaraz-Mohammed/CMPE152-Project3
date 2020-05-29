@@ -4,17 +4,24 @@ statement: assignment_statement
         | if_statement
         | while_statement
         | for_statement
-        | do_statement
+        | do_while_statement
+	| printStatement
+	| return_statement
+	| procedure_call_statement
         ;
 
+compound_statement : (statement)+ ;
+
 assignment_statement: variable '=' expression ';';
-return_stmt : 'return' expr ';'; 
-procedure_call_stmt : IDENTIFIER '(' arguments ')' ';'; 
+return_statement : 'return' expression ';'; 
+procedure_call_statement : IDENTIFIER '(' arguments ')' ';'; 
+
+printStatement      : PRINTF '(' formatString printArg* ')' ';' ;
 
 if_statement : IF '(' expression ')' '{' statement '}' (ELSEIF '(' expression ')' '{' statement '}')+ (ELSE '{' statement '}')? ;
 while_statement: WHILE '(' expression ')' '{' statement '}';
 for_statement: UNTIL '(' expression ')' '{' statement '}';
-do_statement: DO '{' statement '}'; // need to fix
+do_while_statement: DO '{' compound_statement '}' WHILE '(' expression ')' ';' ;
 
 //VARIABLES
 variable: '&' IDENTIFIER;
